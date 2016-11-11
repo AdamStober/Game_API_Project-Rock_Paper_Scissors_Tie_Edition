@@ -1,0 +1,11 @@
+*Thoughts on design*
+
+**What additional properties did you add to your models and why?**
+-User added wins
+-Game added game_cancelled, points, and history
+-Score added won
+
+**What were some of the trade-offs or struggles you faced when implementing the new game logic?**
+-User: Biggest challenge was capturing the leaderboard in a logical way.  The 'starting point' for this exercise assumed that number of wins gets captured in Score, but that doesn't seem to make sense if you're also capturing the date for each score.  Ultimately, it seems to make sense that the number of wins should be associated with each user.
+-Game: This one was tough because my project in an initial iteration didn't really differentiate between "score" and "points" -- every game ended with a game being "won" and getting a value of "1" point.  So, to help myself differentiate better (and make the game more fun!), I created a point attribution model that deviates from a standard "rock, paper, scissors" game: a tie earns a certain number of points (1) as does each win (3).  The question of adding game_cancelled as a boolean was an easy one.  I don't really see the alternative (deleting the game) as better in any way, other than possibly using less storage.  But, I do think any real-world use case where a game was cancelled might benefit from maintaining a record of that game's state, which can be achieved by adding a boolean ('flag').  Finally, "history" is probaly the most challenging of the bunch.  I couldn't figure out how to return history in a Form in the way I wanted to.  Perhaps in a future iteration, I would break out history into its own class, and associate that history class back to Game.
+-Score: Biggest challenge is wondering if this should be its own model at all.  At some future date, this entire model (user, won, date) could probably be captured in its entirety in the Game Model.  Every game object is either won (or not), and has exactly one date.

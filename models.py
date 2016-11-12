@@ -67,6 +67,7 @@ class Game(ndb.Model):
         print score
         score.put()
         self.put()
+        user.put()
 
     @classmethod
     def rando_select(self):
@@ -77,6 +78,7 @@ class Game(ndb.Model):
     def cancel_game(self):
         """Cancels a game"""
         self.game_cancelled = True
+        self.game_over = True
         return
 
 class Score(ndb.Model):

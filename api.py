@@ -8,11 +8,8 @@ primarily with communication to/from the API's users."""
 import logging
 import endpoints
 from protorpc import remote, messages
-from google.appengine.api import memcache
-from google.appengine.api import taskqueue
 
-from models import User, Game, Score
-from models import StringMessage, NewGameForm, GameForm, MakeMoveForm,\
+from models import User, Game, Score, StringMessage, NewGameForm, GameForm, MakeMoveForm,\
     ScoreForms,GameForms,HistoryMessage,UserForm,UserForms
 from utils import get_by_urlsafe
 
@@ -82,17 +79,9 @@ class RockPaperScissorsTieEdition(remote.Service):
     def make_move(self, request):
         """Makes a move. Returns a game state with message"""
         game = get_by_urlsafe(request.urlsafe_game_key, Game)
-        # print game
-        # if not game:
-        #   raise endpoints.NotFoundException(
-        #             'That game does not exist! Go make a new one!')
         if game.game_over:
-            print game
-            return game.to_form('Game already over!')
-        #game.history.append(['Guess: '+str(request.guess),'Target: '+str(game.target)])
-        #game.history.append({'message':request.guess,'guess':game.target})
+          raise endpoints.ForbiddenException('Wait, what? Game is already over!')
         game.history.append({'player_move':request.guess,'computer_move':game.target})
-        #game.history.append(('Guess: ':request.guess,'Target: ':game.target))
         if request.guess == game.target:
           game.points += 1
           msg = '%s vs %s! Tie! Take a point and try again!' % (request.guess , game.target)
